@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
-project(LSLOutOfTreeTest)
+project(LSLOutOfTreeTest
+	LANGUAGES C)
 
 # Most LSL Apps build in the same build tree, but external apps that link
 # against a prebuilt liblsl are still supported. This tests if an app can
@@ -7,7 +8,9 @@ project(LSLOutOfTreeTest)
 # - compile and link successfully
 
 # when building out of tree LSL_ROOT needs to be specified on the cmd line
-find_package(LSL HINTS ${LSL_INSTALL_ROOT}/share/LSL/)
+file(TO_CMAKE_PATH "${LSL_INSTALL_ROOT}" LSL_INSTALL_ROOT)
+list(APPEND LSL_INSTALL_ROOT "${CMAKE_CURRENT_LIST_DIR}/../../LSL/liblsl/build/install")
+find_package(LSL HINTS ${LSL_INSTALL_ROOT}/share/LSL/ QUIET)
 if(NOT LSL_FOUND)
 	message(FATAL_ERROR "Precompiled LSL was not found. Set LSL_INSTALL_ROOT to the LSL installation path ( cmake -DLSL_INSTALL_ROOT=/path/to/installed/lsl)")
 endif()
